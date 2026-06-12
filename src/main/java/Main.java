@@ -4,7 +4,7 @@ import java.io.File;
 public class Main {
     static String path = System.getenv("PATH");        
     static String[] pathDirs = path.split(":");
-    
+
     public static void main(String[] args) throws Exception {       
         Scanner scanner = new Scanner(System.in);
 
@@ -19,11 +19,13 @@ public class Main {
                 System.out.println(command.substring(5));
             } else if (command.startsWith("type ")) { 
                 System.out.println(type(command.substring(5)));
-            }           
-            else {
+            } else if (command.startsWith("custom_exe")) {
+                executable(command);          
+            } else {
                 System.out.println(command + ": command not found");
             }
         }
+        scanner.close();
     }
 
     public static String type(String command) {
@@ -44,5 +46,19 @@ public class Main {
         }
 
         return command + ": not found";
+     }
+
+    public void executable(String command) {
+        ProcessBuilder pb = new ProcessBuilder(command);
+        pb.environment().put("PATH", path);
+        pb.inheritIO();
+        Process process = pb.start();
+
+        for (int i = 0; i < pathDirs.length; i++) {
+            File file = new File(pathDirs[i], command);
+            if (file.exists() && file.canExecute()) {
+                process.waitFor();
+            }
+        }
     }
 }
