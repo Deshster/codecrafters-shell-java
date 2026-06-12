@@ -14,7 +14,18 @@ public class Main {
                 break;
             } else if (command.startsWith("echo ")) {
                 System.out.println(command.substring(5));
-            } else {
+            } else if (command.startsWith("type ")) {
+                if (command.substring(5) == "exit") {
+                    System.out.println("exit is a shell builtin");
+                } else if (command.substring(5) == "echo") {
+                    System.out.println("echo is a shell builtin");
+                } else if (command.substring(5) == "type") { 
+                    System.out.println("type is a shell builtin");
+                } else {
+                    break;
+                }
+            }           
+            else {
                 System.out.println(command + ": command not found");
             }
         }
